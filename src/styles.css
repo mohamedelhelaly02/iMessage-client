@@ -1,0 +1,39 @@
+
+ :host {
+  --color-bg: #ffffff;
+  --color-sidebar-bg: #f6f6f7;
+  --color-border: #e3e3e6;
+  --color-text: #1c1c1e;
+  --color-text-secondary: #8e8e93;
+  --color-sent: #0a84ff;
+  --color-sent-text: #ffffff;
+  --color-received: #e9e9eb;
+  --color-received-text: #1c1c1e;
+  --color-accent: #0a84ff;
+  --color-online: #30d158;
+  --color-badge: #ff3b30;
+
+
+  
+  --success: #30d158;
+  --error: #ff3b30;
+  --warning: #ff9f0a;
+  --info: #0a84ff;
+
+  --font-family: -apple-system, "SF Pro Text", "Segoe UI", "Cairo", "Tahoma", sans-serif;
+
+  --radius-bubble: 18px;
+  --radius-card: 12px;
+
+  display: block;
+  height: 100vh;
+  width: 100%;
+  font-family: var(--font-family);
+  color: var(--color-text);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}

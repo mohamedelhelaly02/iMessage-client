@@ -1,0 +1,70 @@
+<div class="toast-stack" dir="rtl" aria-live="polite">
+
+    @for (toast of toasts(); track toast.id) {
+
+    <div class="toast toast--{{ toast.type }}">
+
+        <div class="toast__icon">
+
+            @if (toast.type === 'success') {
+            <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" fill="#30d158" />
+                <path d="M8 12.5l2.5 2.5L16 9.5" stroke="#fff" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            }
+
+            @if (toast.type === 'error') {
+            <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" fill="#ff3b30" />
+                <path d="M9 9l6 6M15 9l-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            }
+
+            @if (toast.type === 'warning') {
+            <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" fill="#ff9f0a" />
+                <path d="M12 8v5" stroke="#fff" stroke-width="2" stroke-linecap="round" />
+                <circle cx="12" cy="16.2" r="1.1" fill="#fff" />
+            </svg>
+            }
+
+            @if (toast.type === 'info') {
+            <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" fill="#0a84ff" />
+                <path d="M12 11v5" stroke="#fff" stroke-width="2" stroke-linecap="round" />
+                <circle cx="12" cy="7.8" r="1.1" fill="#fff" />
+            </svg>
+            }
+
+        </div>
+
+        <div class="toast__body">
+
+            <p class="toast__title">
+                {{ toast.title }}
+            </p>
+
+            @if (toast.message) {
+            <p class="toast__message">
+                {{ toast.message }}
+            </p>
+            }
+
+        </div>
+
+        <button class="toast__close" type="button" aria-label="إغلاق" (click)="dismiss(toast.id)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
+            </svg>
+        </button>
+
+        @if (toast.duration) {
+        <span class="toast__progress" [style.animation-duration.ms]="toast.duration"></span>
+        }
+
+    </div>
+
+    }
+
+</div>
