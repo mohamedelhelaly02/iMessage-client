@@ -1,10 +1,8 @@
 import { Component, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../../core/auth/auth-service';
 import { IRegisterData } from '../../models/register-data';
-import { SignalRService } from '../../../../core/hub/signalR-service';
 
 @Component({
   imports: [ReactiveFormsModule],
@@ -30,7 +28,6 @@ export class Register {
   errorMessage: WritableSignal<string> = signal('');
 
   private readonly authService = inject(AuthService);
-  private readonly signalRService = inject(SignalRService);
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly destroyedRef = inject(DestroyRef);
 
@@ -55,14 +52,11 @@ export class Register {
     const registerData = this.registerForm.getRawValue() as IRegisterData;
 
     this.authService.register(registerData)
-      .pipe(tap(() => takeUntilDestroyed(this.destroyedRef)))
+      .pipe(takeUntilDestroyed(this.destroyedRef))
       .subscribe({
-        next: (response) => {
+        next: async (response) => {
           console.log('Registration successful:', response);
           this.isLoading.set(false);
-
-          this.signalRService.notifyCallerOnline();
-
         },
         error: (error) => {
           console.error('Registration failed:', error);

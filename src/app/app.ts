@@ -29,6 +29,7 @@ export class App {
   async connect(): Promise<void> {
     try {
       await this.signalRService.startConnection();
+      await this.signalRService.notifyCallerOnline();
     } catch (error) {
       console.error(error);
     }
