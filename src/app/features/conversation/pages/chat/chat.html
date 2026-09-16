@@ -1,1 +1,9 @@
-<p>chat works!</p>
+<main>
+    <app-sidebar></app-sidebar>
+
+    @if (selectedConversation()) {
+    <app-chat-main></app-chat-main>
+    }@else {
+    <app-no-selected-chat></app-no-selected-chat>
+    }
+</main>

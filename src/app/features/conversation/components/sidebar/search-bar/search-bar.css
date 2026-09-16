@@ -1,0 +1,30 @@
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 12px 12px;
+    padding: 8px 10px;
+    background: rgba(118, 118, 128, 0.12);
+    border-radius: 10px;
+}
+
+.search-bar__icon {
+    width: 16px;
+    height: 16px;
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+}
+
+.search-bar__input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 15px;
+    width: 100%;
+    color: var(--color-text);
+    font-family: inherit;
+}
+
+.search-bar__input::placeholder {
+    color: var(--color-text-secondary);
+}

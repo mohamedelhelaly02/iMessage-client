@@ -38,6 +38,9 @@ export class AuthService {
 
         this.authStateService.setToken(response.token);
 
+        this.authStateService.setUser(response.user);
+
+
         this.router.navigate(['/chat']);
     }
 }

@@ -1,5 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Noto+Sans+Arabic:wght@100..900&display=swap');
 
- :host {
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
   --color-bg: #ffffff;
   --color-sidebar-bg: #f6f6f7;
   --color-border: #e3e3e6;
@@ -13,27 +17,48 @@
   --color-online: #30d158;
   --color-badge: #ff3b30;
 
-
-  
   --success: #30d158;
   --error: #ff3b30;
   --warning: #ff9f0a;
-  --info: #0a84ff;
-
-  --font-family: -apple-system, "SF Pro Text", "Segoe UI", "Cairo", "Tahoma", sans-serif;
-
-  --radius-bubble: 18px;
+  --info: #7eafe1;
+  --font-family: "Noto Sans Arabic", sans-serif
   --radius-card: 12px;
 
-  display: block;
-  height: 100vh;
-  width: 100%;
-  font-family: var(--font-family);
-  color: var(--color-text);
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+body {
+  font-family: var(--font-family);
+}
+
+.form-field__error {
+  font-size: 12px;
+  color: var(--error);
+}
+
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.icon-btn:hover {
+  background: rgba(10, 132, 255, 0.1);
+}
+
+.icon-btn svg {
+  width: 19px;
+  height: 19px;
+}
+
+.icon-btn--compose {
+  color: var(--color-accent);
 }

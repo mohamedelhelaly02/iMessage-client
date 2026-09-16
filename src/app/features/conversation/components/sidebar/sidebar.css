@@ -1,0 +1,28 @@
+.sidebar {
+    width: 320px;
+    min-width: 280px;
+    max-width: 360px;
+    background: var(--color-sidebar-bg);
+    border-left: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+
+@media (max-width: 620px) {
+    .sidebar {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        max-width: 100%;
+        z-index: 2;
+    }
+}
+
+@media (max-width: 860px) {
+    .sidebar {
+        width: 260px;
+        min-width: 220px;
+    }
+}

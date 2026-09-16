@@ -1,0 +1,47 @@
+.composer {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    padding: 10px 16px 16px;
+    border-top: 1px solid var(--color-border);
+}
+
+.composer__field {
+    flex: 1;
+    background: var(--color-received);
+    border-radius: 20px;
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+}
+
+.composer__input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    outline: none;
+    resize: none;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.4;
+    max-height: 120px;
+    color: var(--color-text);
+}
+
+.composer__input::placeholder {
+    color: var(--color-text-secondary);
+}
+
+
+.icon-btn--send {
+    background: var(--color-accent);
+    color: #fff;
+}
+
+.icon-btn--send:hover {
+    background: #0071e0;
+}
+
+.icon-btn--attach {
+    color: var(--color-text-secondary);
+}

@@ -2,10 +2,9 @@ import { Component, effect, inject } from '@angular/core';
 import { AuthStateService } from './core/auth/auth-state-service';
 import { SignalRService } from './core/hub/signalR-service';
 import { RouterOutlet } from '@angular/router';
-import { Toast } from './shared/components/toast/toast';
 
 @Component({
-  imports: [RouterOutlet, Toast],
+  imports: [RouterOutlet],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
