@@ -2,6 +2,12 @@ import { Service, inject, signal } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { AuthStateService } from '../auth/auth-state-service';
 import { ToastService } from '../../shared/services/toast-service';
+import { IUser } from '../../features/auth/models/user';
+
+export interface IUserPresenceDto {
+    isOnline: boolean,
+    user: IUser
+}
 
 @Service()
 export class SignalRService {
@@ -11,7 +17,7 @@ export class SignalRService {
     private readonly authStateService = inject(AuthStateService);
     private readonly toastService = inject(ToastService);
 
-    private readonly _onlineUsersSignal = signal<Set<string>>(new Set());
+    private readonly _onlineUsersSignal = signal<Set<IUser>>(new Set());
 
     readonly onlineUsers = this._onlineUsersSignal.asReadonly();
 
@@ -96,53 +102,47 @@ export class SignalRService {
             this.toastService.success('Connected');
         });
 
-        this.hubConnection.on('UserOnline', (userId) => {
-            console.log(`User with id '${userId}' is now online.`);
-            this._onlineUsersSignal.update(users => {
-                const updated = new Set(users);
-
-                updated.add(userId);
-
-                return updated;
-            });
+        this.hubConnection.on('UserOnline', (user: IUser) => {
+            console.log(`User with id '${user.id}' is now online.`);
+            this._onlineUsersSignal.update(users =>
+                new Set([
+                    ...[...users].filter(onlineUser => onlineUser.id !== user.id),
+                    user,
+                ])
+            );
         });
 
-        this.hubConnection.on('UserOffline', (userId) => {
-            console.log(`User with id '${userId}' is now online.`);
-            this._onlineUsersSignal.update(users => {
-
-                const updated = new Set(users);
-
-                updated.delete(userId);
-
-                return updated;
-            });
+        this.hubConnection.on('UserOffline', (user: IUser) => {
+            console.log(`User with id '${user.id}' is now offline.`);
+            this._onlineUsersSignal.update(users =>
+                new Set([...users].filter(onlineUser => onlineUser.id !== user.id))
+            );
         });
 
 
-        this.hubConnection.on('OnlineStatus', statuses => {
-            console.log(`Online status: ${statuses}`);
+        this.hubConnection.on('OnlineStatus', (onlineStatus: IUserPresenceDto[]) => {
+            console.log('Online status:', onlineStatus);
 
             this._onlineUsersSignal.update(users => {
-                const updated = new Set(users);
+                const requestedUserIds = new Set(
+                    onlineStatus.map(status => status.user.id));
 
-                for (const [userId, isOnline] of Object.entries(statuses)) {
+                const updated = new Set(
+                    [...users].filter(user => !requestedUserIds.has(user.id)));
 
-                    if (isOnline) {
-                        updated.add(userId);
-                    } else {
-                        updated.delete(userId);
-                    }
-                }
+                onlineStatus
+                    .filter(status => status.isOnline)
+                    .forEach(status => updated.add(status.user));
 
                 return updated;
             });
-
         });
 
     }
 
     isUserOnline(userId: string): boolean {
-        return this._onlineUsersSignal().has(userId);
+        return [...this._onlineUsersSignal()].some(
+            onlineUser => onlineUser.id === userId
+        );
     }
 }

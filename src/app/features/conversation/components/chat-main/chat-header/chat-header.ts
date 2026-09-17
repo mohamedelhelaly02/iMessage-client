@@ -1,6 +1,8 @@
+import { DatePipe } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
 import { IConversation } from '../../../models/conversation';
 import { AuthStateService } from '../../../../../core/auth/auth-state-service';
+import { SignalRService } from '../../../../../core/hub/signalR-service';
 
 const AVATAR_COLORS = [
   'avatar--purple',
@@ -12,13 +14,14 @@ const AVATAR_COLORS = [
 ];
 
 @Component({
-  imports: [],
+  imports: [DatePipe],
   selector: 'app-chat-header',
   styleUrl: './chat-header.css',
   templateUrl: './chat-header.html',
 })
 export class ChatHeader {
   private readonly authStateService = inject(AuthStateService);
+  private readonly signalRService = inject(SignalRService);
   private currentUserId = this.authStateService.currentUser()?.id;
 
   conversation = input.required<IConversation | undefined>();
@@ -75,5 +78,17 @@ export class ChatHeader {
     if (names.length <= 2) return names.join('، ');
 
     return `${names.slice(0, 2).join('، ')} و${names.length - 2} آخرين`;
+  }
+
+  isUserOnline(conversation: IConversation) {
+    var otherParticipant = this.getOtherParticipant(conversation);
+    if (!otherParticipant)
+      return;
+
+    return this.signalRService.isUserOnline(otherParticipant.userId);
+  }
+
+  getLastSeenAtUtc(conversation: IConversation): string | null {
+    return this.getOtherParticipant(conversation)?.lastSeenAtUtc ?? null;
   }
 }

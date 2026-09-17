@@ -19,12 +19,22 @@
             </span>
             }
 
-
         </div>
 
         <div class="chat-header__info">
             <span class="chat-header__name">{{ getDisplayName(conv) }}</span>
-            @if (getSubtitle(conv); as subtitle) {
+            @if (!isGroup(conv)) {
+            @if (isUserOnline(conv)) {
+            <span class="chat-header__status chat-header__status--online">Online</span>
+            } @else {
+            <span class="chat-header__status chat-header__status--offline">
+                Offline
+                @if (getLastSeenAtUtc(conv); as lastSeenAtUtc) {
+                <span> · Last seen: {{ lastSeenAtUtc | date:'medium':'UTC' }} UTC</span>
+                }
+            </span>
+            }
+            } @else if (getSubtitle(conv); as subtitle) {
             <span class="chat-header__status"> {{ subtitle }} </span>
             }
         </div>

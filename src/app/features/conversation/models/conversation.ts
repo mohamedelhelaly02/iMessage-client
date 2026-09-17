@@ -1,6 +1,7 @@
 export interface IParticipant {
     displayName: string,
-    pictureUrl: string | null,
+    lastSeenAtUtc?: string | null,
+    pictureUrl?: string | null,
     role: string,
     userId: string
 }
