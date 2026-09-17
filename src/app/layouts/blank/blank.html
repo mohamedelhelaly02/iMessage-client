@@ -1,7 +1,9 @@
-<app-toast></app-toast>
+<div class="blank-layout">
+  <app-toast></app-toast>
 
-<app-navbar-blank (logoutEvent)="onLogout()"></app-navbar-blank>
+  <app-navbar-blank (logoutEvent)="onLogout()"></app-navbar-blank>
 
-<div class="app-shell" dir="rtl">
-  <router-outlet></router-outlet>
+  <div class="app-shell" dir="rtl">
+    <router-outlet></router-outlet>
+  </div>
 </div>

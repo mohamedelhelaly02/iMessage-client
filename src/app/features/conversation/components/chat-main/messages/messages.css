@@ -1,7 +1,7 @@
 .messages {
     flex: 1;
     overflow-y: auto;
-    padding: 20px 24px;
+    padding: 20px clamp(16px, 3vw, 32px);
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -22,15 +22,15 @@
 }
 
 .bubble-row--sent {
-    align-self: flex-start;
+    align-self: flex-end;
     /* يمين الشاشة داخل حاوية RTL */
-    align-items: flex-start;
+    align-items: flex-end;
 }
 
 .bubble-row--received {
-    align-self: flex-end;
+    align-self: flex-start;
     /* يسار الشاشة داخل حاوية RTL */
-    align-items: flex-end;
+    align-items: flex-start;
 }
 
 .bubble {
@@ -45,13 +45,13 @@
 .bubble--sent {
     background: var(--color-sent);
     color: var(--color-sent-text);
-    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
 }
 
 .bubble--received {
     background: var(--color-received);
     color: var(--color-received-text);
-    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
 }
 
 .bubble--stacked {
@@ -67,13 +67,13 @@
 
 
 .typing-indicator {
-    align-self: flex-end;
+    align-self: flex-start;
     display: flex;
     gap: 4px;
     background: var(--color-received);
     padding: 10px 14px;
     border-radius: var(--radius-bubble);
-    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
     width: fit-content;
     margin-top: 4px;
 }
@@ -113,5 +113,15 @@
 @media (max-width: 860px) {
     .bubble-row {
         max-width: 78%;
+    }
+}
+
+@media (max-width: 620px) {
+    .messages {
+        padding: 16px;
+    }
+
+    .bubble-row {
+        max-width: 85%;
     }
 }

@@ -4,6 +4,7 @@
   justify-content: space-between;
   padding: 10px 20px;
   border-bottom: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(20px);
 }
 
@@ -79,4 +80,11 @@
 
 .avatar--group {
   background: linear-gradient(160deg, #9ca3af, #6b7280);
+}
+
+.avatar__image {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
 }

@@ -1,10 +1,9 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Service, inject, signal } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { AuthStateService } from '../auth/auth-state-service';
 import { ToastService } from '../../shared/services/toast-service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SignalRService {
     isConnected = signal<boolean>(false);
     private hubConnection!: signalR.HubConnection;
