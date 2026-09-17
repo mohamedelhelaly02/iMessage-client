@@ -11,6 +11,11 @@
                 </svg>
             </span>
             }
+
+            @if (!isGroup(conversation) && isUserOnline(conversation) ) {
+            <span class="online-dot"></span>
+            }
+
         </div>
 
         <div class="chat-item__body">

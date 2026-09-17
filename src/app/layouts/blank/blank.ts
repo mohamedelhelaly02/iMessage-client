@@ -1,12 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Toast } from '../../shared/components/toast/toast';
+import { NavbarBlank } from './components/navbar-blank/navbar-blank';
+import { AuthStateService } from '../../core/auth/auth-state-service';
+import { ConversationService } from '../../features/conversation/services/conversation-service';
 @Component({
-  imports: [RouterOutlet, Toast],
+  imports: [RouterOutlet, Toast, NavbarBlank],
   selector: 'app-blank',
   styleUrl: './blank.css',
   templateUrl: './blank.html',
 })
 export class Blank {
-
+  private readonly authStateService = inject(AuthStateService);
+  private readonly conversationService = inject(ConversationService);
+  onLogout() {
+    if (confirm('Are you sure to signout ?')) {
+      this.authStateService.resetAuthState();
+      this.conversationService.resetConversationState();
+    }
+  }
 }

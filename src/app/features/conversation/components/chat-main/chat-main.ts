@@ -13,11 +13,5 @@ import { IConversation } from '../../models/conversation';
 })
 export class ChatMain {
   private readonly conversationService = inject(ConversationService);
-  conversations = this.conversationService.conversations();
-  selectedConversationId = this.conversationService.selectedConversationId();
-
-  getSelectedConversation(): IConversation | undefined {
-    return this.conversations.find(c => c.id === this.selectedConversationId);
-  }
-
+  selectedConversation = this.conversationService.currentSelectedConversation;
 }

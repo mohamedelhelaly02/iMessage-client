@@ -13,6 +13,6 @@ import { ConversationService } from '../../services/conversation-service';
 export class Chat {
   private readonly conversationService = inject(ConversationService);
 
-  selectedConversation = this.conversationService.selectedConversationId;
+  selectedConversation = this.conversationService.currentSelectedConversation;
 
 }

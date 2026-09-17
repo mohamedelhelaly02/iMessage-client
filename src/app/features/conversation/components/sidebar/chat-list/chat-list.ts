@@ -3,6 +3,7 @@ import { ConversationService } from '../../../services/conversation-service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IConversation } from '../../../models/conversation';
 import { AuthStateService } from '../../../../../core/auth/auth-state-service';
+import { SignalRService } from '../../../../../core/hub/signalR-service';
 
 const AVATAR_COLORS = [
   'avatar--purple',
@@ -24,16 +25,37 @@ export class ChatList implements OnInit {
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
   private readonly conversationService = inject(ConversationService);
   private readonly authStateService = inject(AuthStateService);
+  readonly signalRService = inject(SignalRService);
 
   readonly currentUser = this.authStateService.currentUser();
 
   conversations = this.conversationService.conversations;
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.conversationService.getConversations()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+      .subscribe(() => {
+        if (this.signalRService.isConnected()) {
+          this.loadOnlineStatus();
+        }
+      });
   }
+
+  private async loadOnlineStatus(): Promise<void> {
+    const userIds = this.conversations()
+      .map(conv =>
+        this.getOtherParticipant(conv)?.userId
+      )
+      .filter(
+        (userId): userId is string => !!userId
+      );
+
+    if (userIds.length === 0)
+      return;
+
+    await this.signalRService.getOnlineStatus(userIds);
+  }
+
 
   getAvatarColorClass(conversation: IConversation) {
     const seed = this.isGroup(conversation)
@@ -75,6 +97,14 @@ export class ChatList implements OnInit {
 
   selectConversation(id: string) {
     console.log(`Selected Conversation: ${id}`);
-    this.conversationService.selectedConversationId.set(id);
+    this.conversationService.selectConversation(id);
+  }
+
+  isUserOnline(conversation: IConversation) {
+    var otherParticipant = this.getOtherParticipant(conversation);
+    if (!otherParticipant)
+      return;
+
+    return this.signalRService.isUserOnline(otherParticipant.userId);
   }
 }
