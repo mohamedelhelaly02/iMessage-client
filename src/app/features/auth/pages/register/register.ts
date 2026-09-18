@@ -4,6 +4,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../../core/auth/auth-service';
 import { IRegisterData } from '../../models/register-data';
 import { RouterLink } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ApiProblemDetails } from '../../../../core/helpers/apiProblemDetails';
+import { finalize } from 'rxjs';
 
 @Component({
   imports: [ReactiveFormsModule, RouterLink],
@@ -36,7 +39,10 @@ export class Register {
   registerForm = this.fb.group({
     displayName: ['', [Validators.required, Validators.maxLength(100)]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    password: ['', [
+      Validators.required,
+      Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$')
+    ]],
     confirmPassword: ['', [Validators.required]],
   }, {
     validators: [this.passwordMatchValidator]
@@ -45,6 +51,8 @@ export class Register {
   onSubmit(): void {
 
     if (this.registerForm.invalid) {
+      console.log("form invalid")
+      console.log(this.registerForm.controls);
       this.registerForm.markAllAsTouched();
       return;
     }
@@ -53,16 +61,66 @@ export class Register {
     const registerData = this.registerForm.getRawValue() as IRegisterData;
 
     this.authService.register(registerData)
-      .pipe(takeUntilDestroyed(this.destroyedRef))
+      .pipe(
+        takeUntilDestroyed(this.destroyedRef),
+        finalize(() => this.isLoading.set(false))
+      )
       .subscribe({
-        next: async (response) => {
+
+        next: response => {
           console.log('Registration successful:', response);
-          this.isLoading.set(false);
         },
-        error: (error) => {
-          console.error('Registration failed:', error);
-          this.isLoading.set(false);
-        },
+
+        error: (httpError: HttpErrorResponse) => {
+          console.error('Registration failed:', httpError);
+
+          const problem = httpError.error as ApiProblemDetails;
+
+          console.log(problem)
+
+
+          if (problem?.code === 'User.RegisterationValidation') {
+            for (const [fieldName, messages] of Object.entries(problem.errors ?? {})) {
+
+              console.log('field:', fieldName);
+              console.log('messages:', messages);
+
+              if (fieldName.startsWith('password')) {
+
+                const passwordControl =
+                  this.registerForm.controls.password;
+
+                passwordControl.setErrors({
+                  ...passwordControl.errors,
+                  server: messages
+                });
+
+                passwordControl.markAsTouched();
+
+                continue;
+              }
+
+              if (fieldName === 'confirmPassword') {
+
+                const confirmPasswordControl =
+                  this.registerForm.controls.confirmPassword;
+
+                confirmPasswordControl.setErrors({
+                  ...confirmPasswordControl.errors,
+                  server: messages
+                });
+
+                confirmPasswordControl.markAsTouched();
+              }
+            }
+          }
+          else if (problem.code === 'Validation.Failed') {
+
+          }
+
+
+        }
+
       });
 
 

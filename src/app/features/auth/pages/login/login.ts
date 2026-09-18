@@ -4,6 +4,7 @@ import { AuthService } from '../../../../core/auth/auth-service';
 import { ILoginData } from '../../models/login-data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   imports: [ReactiveFormsModule, RouterLink],
@@ -28,6 +29,9 @@ export class Login {
       .subscribe({
         next: (response) => {
           console.log(response);
+        },
+        error: (e: HttpErrorResponse) => {
+          console.log("error from server: ", e);
         }
       });
   }
