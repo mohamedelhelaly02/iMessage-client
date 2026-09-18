@@ -45,7 +45,9 @@ body {
 
 button,
 input,
-textarea { font: inherit; }
+textarea {
+  font: inherit;
+}
 
 .form-field__error {
   font-size: 12px;
@@ -72,7 +74,9 @@ textarea { font: inherit; }
   background: rgba(10, 132, 255, 0.1);
 }
 
-.icon-btn:active { transform: scale(0.94); }
+.icon-btn:active {
+  transform: scale(0.94);
+}
 
 .icon-btn:focus-visible,
 button:focus-visible,
@@ -90,4 +94,48 @@ textarea:focus-visible {
 
 .icon-btn--compose {
   color: var(--color-accent);
+}
+
+
+.chat-header__status--typing {
+  color: var(--color-online, #22c55e);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.typing-dots {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.typing-dots span {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: typing-pulse 1.2s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes typing-pulse {
+
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
 }

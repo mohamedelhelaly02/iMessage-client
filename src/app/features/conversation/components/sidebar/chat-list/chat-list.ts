@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { ConversationService } from '../../../services/conversation-service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IConversation } from '../../../models/conversation';
@@ -26,10 +26,10 @@ export class ChatList implements OnInit {
   private readonly conversationService = inject(ConversationService);
   private readonly authStateService = inject(AuthStateService);
   readonly signalRService = inject(SignalRService);
-
   readonly currentUser = this.authStateService.currentUser();
-
   conversations = this.conversationService.conversations;
+  typingUsers = this.signalRService.typingUsers;
+  typingConversations = this.signalRService.typingConversations;
 
   ngOnInit() {
     this.conversationService.getConversations()
@@ -39,6 +39,10 @@ export class ChatList implements OnInit {
           this.loadOnlineStatus();
         }
       });
+  }
+
+  isConversationTyping(conversationId: string) {
+    return this.typingConversations().has(conversationId);
   }
 
   private async loadOnlineStatus(): Promise<void> {

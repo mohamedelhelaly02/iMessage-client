@@ -11,7 +11,6 @@ export interface IUserPresenceDto {
 
 @Service()
 export class SignalRService {
-
     isConnected = signal<boolean>(false);
     private hubConnection!: signalR.HubConnection;
     private readonly HUB_URL: string = 'https://localhost:7116/hubs/chat';
@@ -19,9 +18,11 @@ export class SignalRService {
     private readonly toastService = inject(ToastService);
     private readonly _onlineUsersSignal = signal<Set<IUser>>(new Set());
     private readonly _typingUsers = signal<Map<string, Set<string>>>(new Map());
+    private readonly _typingConversations = signal<Set<string>>(new Set());
 
     readonly onlineUsers = this._onlineUsersSignal.asReadonly();
     readonly typingUsers = this._typingUsers.asReadonly();
+    readonly typingConversations = this._typingConversations.asReadonly();
 
     async startConnection(): Promise<void> {
         if (
@@ -98,21 +99,42 @@ export class SignalRService {
 
     }
 
-    async startTyping(conversatioId: string): Promise<void> {
+    async startTyping(conversationId: string): Promise<void> {
         if (!this.isConnected())
             return;
         try {
-            await this.hubConnection.invoke('StartTyping', conversatioId)
+            await this.hubConnection.invoke('StartTyping', conversationId)
         } catch (error) {
             console.error(`Failed to start typing: ${error}`);
         }
     }
+
+    async startConversationTyping(conversationId: string) {
+        if (!this.isConnected())
+            return;
+        try {
+            await this.hubConnection.invoke('StartConversationTyping', conversationId)
+        } catch (error) {
+            console.error(`Failed to start typing: ${error}`);
+        }
+    }
+
 
     async stopTyping(conversatioId: string): Promise<void> {
         if (!this.isConnected())
             return;
         try {
             await this.hubConnection.invoke('StopTyping', conversatioId)
+        } catch (error) {
+            console.error(`Failed to stop typing: ${error}`);
+        }
+    }
+
+    async stopConversationTyping(conversationId: string): Promise<void> {
+        if (!this.isConnected())
+            return;
+        try {
+            await this.hubConnection.invoke('StopConversationTyping', conversationId)
         } catch (error) {
             console.error(`Failed to stop typing: ${error}`);
         }
@@ -213,6 +235,30 @@ export class SignalRService {
 
                 return updatedTypingUsers;
             });
+
+        });
+
+        this.hubConnection.on('ConversationStartedTyping', (conversationId: string) => {
+            if (!conversationId)
+                return;
+
+            this._typingConversations.update(typingConversations => {
+                const updatedTypingConversations = new Set(typingConversations);
+                updatedTypingConversations.add(conversationId);
+                return updatedTypingConversations;
+            })
+
+        });
+
+        this.hubConnection.on('ConversationStoppedTyping', (conversationId: string) => {
+            if (!conversationId)
+                return;
+
+            this._typingConversations.update(typingConversations => {
+                const updatedTypingConversations = new Set(typingConversations);
+                updatedTypingConversations.delete(conversationId);
+                return updatedTypingConversations;
+            })
 
         });
 

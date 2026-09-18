@@ -1,39 +1,48 @@
 <nav class="chat-list" dir="rtl">
-    @for (conversation of conversations(); track conversation.id) {
+  @for (conversation of conversations(); track conversation.id) {
     <a class="chat-item" role="button" (click)="selectConversation(conversation.id)">
-        <div class="avatar {{ getAvatarColorClass(conversation) }}">
-            <span>{{ getAvatarInitial(conversation) }}</span>
-            @if (isGroup(conversation)) {
-            <span class="avatar__group-badge">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                        d="M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4zM8 11a3.5 3.5 0 1 0-3.5-3.5A3.5 3.5 0 0 0 8 11zm8 2c-2.4 0-7.2 1.2-7.2 3.6V19h14.4v-2.4C23.2 14.2 18.4 13 16 13zm-8 .6C6.6 13.2 1 14.2 1 16.8V19h6v-3.6a5 5 0 0 1 1.9-3.9c-.3 0-.6-.1-.9-.1z" />
-                </svg>
+      <div class="avatar {{ getAvatarColorClass(conversation) }}">
+        <span>{{ getAvatarInitial(conversation) }}</span>
+        @if (isGroup(conversation)) {
+          <span class="avatar__group-badge">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4zM8 11a3.5 3.5 0 1 0-3.5-3.5A3.5 3.5 0 0 0 8 11zm8 2c-2.4 0-7.2 1.2-7.2 3.6V19h14.4v-2.4C23.2 14.2 18.4 13 16 13zm-8 .6C6.6 13.2 1 14.2 1 16.8V19h6v-3.6a5 5 0 0 1 1.9-3.9c-.3 0-.6-.1-.9-.1z"
+              />
+            </svg>
+          </span>
+        }
+
+        @if (!isGroup(conversation) && isUserOnline(conversation)) {
+          <span class="online-dot"></span>
+        }
+      </div>
+
+      <div class="chat-item__body">
+        <div class="chat-item__row">
+          <span class="chat-item__name">{{ getDisplayName(conversation) }}</span>
+
+          @if (conversation.lastMessageAtUtc) {
+            <span class="chat-item__time">
+              {{ formatTime(conversation.lastMessageAtUtc) }}
             </span>
-            }
-
-            @if (!isGroup(conversation) && isUserOnline(conversation) ) {
-            <span class="online-dot"></span>
-            }
-
+          }
         </div>
 
-        <div class="chat-item__body">
-            <div class="chat-item__row">
-                <span class="chat-item__name">{{ getDisplayName(conversation) }}</span>
-                @if (conversation.lastMessageAtUtc) {
-                <span class="chat-item__time">
-                    {{ formatTime(conversation.lastMessageAtUtc) }}
-                </span>
-                }
-            </div>
+        @if (isConversationTyping(conversation.id)) {
+          <span class="chat-header__status chat-header__status--typing">
+            يكتب<span class="typing-dots" aria-label="Typing"
+              ><span></span><span></span><span></span
+            ></span>
+          </span>
+        }
 
-            @if (conversation.lastMessageAtUtc) {
-            <p class="chat-item__preview">آخر نشاط {{ formatTime(conversation.lastMessageAtUtc) }}</p>
-            } @else {
-            <p class="chat-item__preview chat-item__preview--empty">ابدأ المحادثة الآن</p>
-            }
-        </div>
+        @if (conversation.lastMessageAtUtc) {
+          <p class="chat-item__preview">آخر نشاط {{ formatTime(conversation.lastMessageAtUtc) }}</p>
+        } @else {
+          <p class="chat-item__preview chat-item__preview--empty">ابدأ المحادثة الآن</p>
+        }
+      </div>
     </a>
-    }
+  }
 </nav>

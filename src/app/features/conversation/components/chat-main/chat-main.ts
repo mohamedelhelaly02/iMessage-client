@@ -23,18 +23,16 @@ export class ChatMain {
 
   onMessageSend(message: string) {
   }
-  onUserTyping() {
+  async onUserTyping() {
     const conversationId = this.selectedConversation()?.id;
     if (!conversationId)
       return;
 
-    console.log("onUserTyping: ", conversationId)
-
     if (!this._isTyping()) {
       this._isTyping.set(true);
-      console.log("start typing");
-      
-      this._signalRService.startTyping(conversationId);
+
+      await this._signalRService.startTyping(conversationId);
+      await this._signalRService.startConversationTyping(conversationId);
     }
 
     this.resetTypingTimeout(conversationId);
@@ -47,13 +45,19 @@ export class ChatMain {
 
     this._typingTimeout = setTimeout(() => {
       this.stopTyping(conversationId);
+      this.stopConversationTyping(conversationId);
     }, 1000);
   }
-  stopTyping(conversationId: string) {
+
+  private stopTyping(conversationId: string) {
+    this._signalRService.stopTyping(conversationId);
+  }
+
+  private stopConversationTyping(conversationId: string): void {
     if (!this._isTyping())
       return;
     this._isTyping.set(false);
-    this._signalRService.stopTyping(conversationId);
+    this._signalRService.stopConversationTyping(conversationId);
   }
 
   isOtherUserTyping(): boolean {

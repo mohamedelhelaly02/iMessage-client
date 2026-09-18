@@ -23,16 +23,16 @@
         <span class="chat-header__name">{{ getDisplayName(conv) }}</span>
         @if (isOtherUserTyping()) {
           <span class="chat-header__status chat-header__status--typing">
-            Typing<span class="typing-dots" aria-label="Typing"
+            يكتب<span class="typing-dots" aria-label="Typing"
               ><span></span><span></span><span></span
             ></span>
           </span>
         } @else if (!isGroup(conv)) {
           @if (isUserOnline(conv)) {
-            <span class="chat-header__status chat-header__status--online">Online</span>
+            <span class="chat-header__status chat-header__status--online">متصل</span>
           } @else {
             <span class="chat-header__status chat-header__status--offline">
-              Offline
+              غير متصل
               @if (getLastSeenAtUtc(conv); as lastSeenAtUtc) {
                 <span> · Last seen: {{ lastSeenAtUtc | date: 'medium' : 'UTC' }} UTC</span>
               }
