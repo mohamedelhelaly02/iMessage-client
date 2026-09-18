@@ -1,5 +1,8 @@
 <main class="chat-main">
-    <app-chat-header [conversation]="selectedConversation()"></app-chat-header>
-    <app-messages></app-messages>
-    <app-composer></app-composer>
+  <app-chat-header
+    [isOtherUserTyping]="isOtherUserTyping()"
+    [conversation]="selectedConversation()">
+  </app-chat-header>
+  <app-messages [isOtherUserTyping]="isOtherUserTyping()"></app-messages>
+  <app-composer (onTyping)="onUserTyping()" (onMessageSend)="onMessageSend($event)"></app-composer>
 </main>

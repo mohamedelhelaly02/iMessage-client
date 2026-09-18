@@ -1,41 +1,29 @@
 <section class="messages" aria-live="polite">
+  <span class="messages__date-divider">اليوم</span>
 
-    <span class="messages__date-divider">اليوم</span>
+  <div class="bubble-row bubble-row--received">
+    <div class="bubble bubble--received">أهلاً! جاهزة نراجع تصميم الشاشة الجديدة؟</div>
+  </div>
 
-    <div class="bubble-row bubble-row--received">
-        <div class="bubble bubble--received">
-            أهلاً! جاهزة نراجع تصميم الشاشة الجديدة؟
-        </div>
-    </div>
+  <div class="bubble-row bubble-row--sent">
+    <div class="bubble bubble--sent">أكيد، عطيني ٥ دقايق وأكون عندك</div>
+    <span class="bubble-row__receipt">تم التسليم</span>
+  </div>
 
-    <div class="bubble-row bubble-row--sent">
-        <div class="bubble bubble--sent">
-            أكيد، عطيني ٥ دقايق وأكون عندك
-        </div>
-        <span class="bubble-row__receipt">تم التسليم</span>
-    </div>
+  <div class="bubble-row bubble-row--received">
+    <div class="bubble bubble--received">تمام خذ وقتك 🙂</div>
+  </div>
 
-    <div class="bubble-row bubble-row--received">
-        <div class="bubble bubble--received">
-            تمام خذ وقتك 🙂
-        </div>
-    </div>
+  <div class="bubble-row bubble-row--received">
+    <div class="bubble bubble--received bubble--stacked">بس لا تنسى ترسل لي الألوان النهائية</div>
+  </div>
 
-    <div class="bubble-row bubble-row--received">
-        <div class="bubble bubble--received bubble--stacked">
-            بس لا تنسى ترسل لي الألوان النهائية
-        </div>
-    </div>
+  <div class="bubble-row bubble-row--sent">
+    <div class="bubble bubble--sent">تمام، أشوفك الساعة سبعة 👍</div>
+    <span class="bubble-row__receipt">مقروءة · 9:41 م</span>
+  </div>
 
-    <div class="bubble-row bubble-row--sent">
-        <div class="bubble bubble--sent">
-            تمام، أشوفك الساعة سبعة 👍
-        </div>
-        <span class="bubble-row__receipt">مقروءة · 9:41 م</span>
-    </div>
-
-    <div class="typing-indicator">
-        <span></span><span></span><span></span>
-    </div>
-
+  @if (isOtherUserTyping()) {
+    <div class="typing-indicator"><span></span><span></span><span></span></div>
+  }
 </section>

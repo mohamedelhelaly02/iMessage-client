@@ -11,15 +11,17 @@ export interface IUserPresenceDto {
 
 @Service()
 export class SignalRService {
+
     isConnected = signal<boolean>(false);
     private hubConnection!: signalR.HubConnection;
     private readonly HUB_URL: string = 'https://localhost:7116/hubs/chat';
     private readonly authStateService = inject(AuthStateService);
     private readonly toastService = inject(ToastService);
-
     private readonly _onlineUsersSignal = signal<Set<IUser>>(new Set());
+    private readonly _typingUsers = signal<Map<string, Set<string>>>(new Map());
 
     readonly onlineUsers = this._onlineUsersSignal.asReadonly();
+    readonly typingUsers = this._typingUsers.asReadonly();
 
     async startConnection(): Promise<void> {
         if (
@@ -44,7 +46,7 @@ export class SignalRService {
             this.isConnected.set(true);
         } catch (error) {
             console.error('Error while starting SignalR connection: ', error);
-            this.isConnected.set(true);
+            this.isConnected.set(false);
         }
     }
 
@@ -96,6 +98,56 @@ export class SignalRService {
 
     }
 
+    async startTyping(conversatioId: string): Promise<void> {
+        if (!this.isConnected())
+            return;
+        try {
+            await this.hubConnection.invoke('StartTyping', conversatioId)
+        } catch (error) {
+            console.error(`Failed to start typing: ${error}`);
+        }
+    }
+
+    async stopTyping(conversatioId: string): Promise<void> {
+        if (!this.isConnected())
+            return;
+        try {
+            await this.hubConnection.invoke('StopTyping', conversatioId)
+        } catch (error) {
+            console.error(`Failed to stop typing: ${error}`);
+        }
+    }
+
+
+    async joinConversation(id: string): Promise<void> {
+        try {
+            await this.hubConnection.invoke('JoinConversation', id);
+            console.log("successfully joined group: ", id);
+        } catch (error) {
+            console.error(`Can not join conversation: ${error}`)
+        }
+    }
+
+    async leaveConversation(id: string): Promise<void> {
+        try {
+            await this.hubConnection.invoke('LeaveConversation', id);
+        } catch (error) {
+            console.error(`Can not leave conversation: ${error}`)
+        }
+    }
+
+
+    isUserOnline(userId: string): boolean {
+        return [...this._onlineUsersSignal()].some(
+            onlineUser => onlineUser.id === userId
+        );
+    }
+
+    isUserTyping(conversationId: string, userId: string): boolean {
+        return this._typingUsers().get(conversationId)?.has(userId) ?? false;
+    }
+
+
 
     private registerHubEvents(): void {
         this.hubConnection.on('ReceiveCallerConnected', () => {
@@ -138,11 +190,66 @@ export class SignalRService {
             });
         });
 
+        this.hubConnection.on('UserTyping', (conversationId, userId) => {
+
+            if (!conversationId || !userId || userId === this.authStateService.currentUser()?.id) {
+                return;
+            }
+
+            const wasTyping = this.isUserTyping(conversationId, userId);
+
+            if (!wasTyping) {
+                const typingPulse = new Audio('/assets/sounds/typing-sound.mp3');
+                typingPulse.play().catch(() => { });
+            }
+
+
+            this._typingUsers.update(typingUsers => {
+                const updatedTypingUsers = new Map(typingUsers);
+                const typingUserIds = new Set(updatedTypingUsers.get(conversationId) ?? []);
+
+                typingUserIds.add(userId);
+                updatedTypingUsers.set(conversationId, typingUserIds);
+
+                return updatedTypingUsers;
+            });
+
+        });
+
+        this.hubConnection.on('UserStoppedTyping', (conversationId: string, userId: string) => {
+            if (!conversationId || !userId || userId === this.authStateService.currentUser()?.id) {
+                return;
+            }
+
+            this._typingUsers.update(typingUsers => {
+                const updatedTypingUsers = new Map(typingUsers);
+                const typingUserIds = new Set(updatedTypingUsers.get(conversationId) ?? []);
+
+                typingUserIds.delete(userId);
+
+                if (typingUserIds.size === 0) {
+                    updatedTypingUsers.delete(conversationId);
+                } else {
+                    updatedTypingUsers.set(conversationId, typingUserIds);
+                }
+
+                return updatedTypingUsers;
+            });
+        });
+
+
+        this.hubConnection.onreconnecting(error => {
+            console.warn('SignalR reconnecting', error);
+        });
+
+        this.hubConnection.onreconnected(connectionId => {
+            console.log('SignalR reconnected:', connectionId);
+        });
+
+        this.hubConnection.onclose(error => {
+            console.error('SignalR closed', error);
+        });
+
     }
 
-    isUserOnline(userId: string): boolean {
-        return [...this._onlineUsersSignal()].some(
-            onlineUser => onlineUser.id === userId
-        );
-    }
 }

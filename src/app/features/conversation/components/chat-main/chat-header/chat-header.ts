@@ -24,6 +24,9 @@ export class ChatHeader {
   private readonly signalRService = inject(SignalRService);
   private currentUserId = this.authStateService.currentUser()?.id;
 
+  isOtherUserTyping = input.required<boolean>();
+
+
   conversation = input.required<IConversation | undefined>();
 
   isGroup(conversation: IConversation): boolean {

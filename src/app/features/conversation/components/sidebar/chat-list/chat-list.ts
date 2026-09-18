@@ -95,9 +95,10 @@ export class ChatList implements OnInit {
     return conversation.conversationType === "Group";
   }
 
-  selectConversation(id: string) {
+  async selectConversation(id: string) {
     console.log(`Selected Conversation: ${id}`);
     this.conversationService.selectConversation(id);
+    await this.signalRService.joinConversation(id);
   }
 
   isUserOnline(conversation: IConversation) {

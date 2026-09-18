@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ChatHeader } from './chat-header/chat-header';
 import { Messages } from './messages/messages';
 import { Composer } from './composer/composer';
 import { ConversationService } from '../../services/conversation-service';
-import { IConversation } from '../../models/conversation';
+import { SignalRService } from '../../../../core/hub/signalR-service';
+import { AuthStateService } from '../../../../core/auth/auth-state-service';
 
 @Component({
   imports: [ChatHeader, Messages, Composer],
@@ -12,6 +13,64 @@ import { IConversation } from '../../models/conversation';
   templateUrl: './chat-main.html',
 })
 export class ChatMain {
-  private readonly conversationService = inject(ConversationService);
-  selectedConversation = this.conversationService.currentSelectedConversation;
+  private _isTyping = signal<boolean>(false);
+  private _typingTimeout: any;
+  private readonly _conversationService = inject(ConversationService);
+  private readonly _signalRService = inject(SignalRService);
+  private readonly _authStateService = inject(AuthStateService);
+
+  selectedConversation = this._conversationService.currentSelectedConversation;
+
+  onMessageSend(message: string) {
+  }
+  onUserTyping() {
+    const conversationId = this.selectedConversation()?.id;
+    if (!conversationId)
+      return;
+
+    console.log("onUserTyping: ", conversationId)
+
+    if (!this._isTyping()) {
+      this._isTyping.set(true);
+      console.log("start typing");
+      
+      this._signalRService.startTyping(conversationId);
+    }
+
+    this.resetTypingTimeout(conversationId);
+
+  }
+  resetTypingTimeout(conversationId: string) {
+    if (this._typingTimeout) {
+      clearTimeout(this._typingTimeout);
+    }
+
+    this._typingTimeout = setTimeout(() => {
+      this.stopTyping(conversationId);
+    }, 1000);
+  }
+  stopTyping(conversationId: string) {
+    if (!this._isTyping())
+      return;
+    this._isTyping.set(false);
+    this._signalRService.stopTyping(conversationId);
+  }
+
+  isOtherUserTyping(): boolean {
+    const conversation = this.selectedConversation();
+    if (!conversation) {
+      return false;
+    }
+    const otherParticipant = conversation
+      ?.participants.find(
+        p => p.userId != this._authStateService.currentUser()?.id);
+
+    if (!otherParticipant) {
+      return false;
+    }
+
+    return this._signalRService.isUserTyping(conversation.id, otherParticipant.userId);
+
+  }
+
 }

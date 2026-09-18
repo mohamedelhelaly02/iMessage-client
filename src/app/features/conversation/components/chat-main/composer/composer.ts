@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, output, signal } from '@angular/core';
 
 @Component({
   imports: [],
@@ -6,4 +6,26 @@ import { Component } from '@angular/core';
   styleUrl: './composer.css',
   templateUrl: './composer.html',
 })
-export class Composer {}
+export class Composer {
+  message = signal<string>('');
+  onTyping = output<void>();
+  onMessageSend = output<string>();
+
+
+  onMessageInput(event: InputEvent) {
+    const input = event.target as HTMLInputElement;
+    this.message.set(input.value);
+
+    this.onTyping.emit();
+
+  }
+  sendMessage() {
+    const message = this.message().trim();
+    if (!message)
+      return;
+
+    this.onMessageSend.emit(message);
+
+  }
+
+}

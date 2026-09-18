@@ -28,6 +28,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
 const handleLogout = async (authStateService: AuthStateService, signalRService: SignalRService, router: Router) => {
   authStateService.resetAuthState();
-  signalRService.startConnection();
+  signalRService.stopConnection();
   router.navigate(['/login']);
 }
