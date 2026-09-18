@@ -1,10 +1,11 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../../core/auth/auth-service';
 import { ILoginData } from '../../models/login-data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ApiProblemDetails } from '../../../../core/helpers/apiProblemDetails';
 
 @Component({
   imports: [ReactiveFormsModule, RouterLink],
@@ -13,6 +14,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: './login.html',
 })
 export class Login {
+  serverError = signal<string>('');
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly authService = inject(AuthService);
@@ -31,7 +33,15 @@ export class Login {
           console.log(response);
         },
         error: (e: HttpErrorResponse) => {
-          console.log("error from server: ", e);
+          const problem = e.error as ApiProblemDetails;
+          if (problem.status === 401 && problem.code === 'User.InvalidCredentials') {
+            this.serverError.set(problem.detail ?? '');
+          }
+
+          setTimeout(() => {
+            this.serverError.set('');
+          }, 3000);
+
         }
       });
   }
