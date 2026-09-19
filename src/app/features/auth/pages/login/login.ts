@@ -6,8 +6,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiProblemDetails } from '../../../../core/helpers/apiProblemDetails';
-import { LanguageService } from '../../../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ToastService } from '../../../../shared/services/toast-service';
 
 @Component({
   imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
@@ -17,9 +17,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class Login {
   serverError = signal<string>('');
+  isLoading = signal<boolean>(false);
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly authService = inject(AuthService);
+  private readonly _toastService = inject(ToastService);
 
   loginForm = this.fb.group({
     email: [''],
@@ -28,13 +30,16 @@ export class Login {
 
   onSubmit(): void {
     const loginData = this.loginForm.getRawValue() as ILoginData;
+    this.isLoading.set(true);
     this.authService.login(loginData)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          console.log(response);
+          this.isLoading.set(false);
+          this._toastService.success('Login completed');
         },
         error: (e: HttpErrorResponse) => {
+          this.isLoading.set(false);
           const problem = e.error as ApiProblemDetails;
           if (problem.status === 401 && problem.code === 'User.InvalidCredentials') {
             this.serverError.set(problem.detail ?? '');

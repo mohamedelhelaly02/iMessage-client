@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ConversationService } from '../../../services/conversation-service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -22,8 +22,7 @@ const AVATAR_COLORS = [
   styleUrl: './chat-list.css',
   templateUrl: './chat-list.html',
 })
-export class ChatList implements OnInit {
-
+export class ChatList implements OnInit, OnDestroy {
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
   private readonly conversationService = inject(ConversationService);
   private readonly authStateService = inject(AuthStateService);
@@ -32,7 +31,7 @@ export class ChatList implements OnInit {
   conversations = this.conversationService.conversations;
   typingUsers = this.signalRService.typingUsers;
   typingConversations = this.signalRService.typingConversations;
-
+  activeConversationId = this.conversationService.activeConversationId;
   ngOnInit() {
     this.conversationService.getConversations()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -41,6 +40,12 @@ export class ChatList implements OnInit {
           this.loadOnlineStatus();
         }
       });
+  }
+
+  ngOnDestroy(): void {
+    if (this.activeConversationId()) {
+      this.signalRService.leaveConversation(this.activeConversationId());
+    }
   }
 
   isConversationTyping(conversationId: string) {
@@ -103,8 +108,20 @@ export class ChatList implements OnInit {
 
   async selectConversation(id: string) {
     console.log(`Selected Conversation: ${id}`);
+
+    if (this.activeConversationId() === id) {
+      console.log("User selected the same conversation");
+      return;
+    }
+
+    if (this.activeConversationId()) {
+      console.log(`Leaving conversation: ${this.activeConversationId()}`);
+      await this.signalRService.leaveConversation(this.activeConversationId());
+    }
+
     this.conversationService.selectConversation(id);
     await this.signalRService.joinConversation(id);
+    this.conversationService.setActiveConversation(id);
   }
 
   isUserOnline(conversation: IConversation) {

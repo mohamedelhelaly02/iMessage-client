@@ -39,15 +39,6 @@
   background: radial-gradient(circle at 60% 40%, #c9a7ff, #8e54e9 70%);
 }
 
-/* ===================== منطقة المحتوى ===================== */
-.auth-shell__language {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  padding: 18px 20px 0;
-}
-
 .auth-shell__content {
   position: relative;
   z-index: 1;

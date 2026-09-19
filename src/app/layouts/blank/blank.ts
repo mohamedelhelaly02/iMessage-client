@@ -16,7 +16,7 @@ export class Blank {
   private readonly conversationService = inject(ConversationService);
   readonly isRtl = inject(LanguageService).isRtl;
 
-  onLogout() {
+  async onLogout() {
     if (confirm('Are you sure to signout ?')) {
       this.authStateService.resetAuthState();
       this.conversationService.resetConversationState();

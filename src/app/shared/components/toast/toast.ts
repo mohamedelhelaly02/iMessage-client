@@ -15,4 +15,14 @@ export class Toast {
   dismiss(id: number): void {
     this.toastService.dismiss(id);
   }
+
+  toastAccentColor(type: string): string {
+    const colors: Record<string, string> = {
+      success: '#30d158',
+      error: '#ff3b30',
+      warning: '#ff9f0a',
+      info: '#0a84ff',
+    };
+    return colors[type] ?? colors['info'];
+  }
 }

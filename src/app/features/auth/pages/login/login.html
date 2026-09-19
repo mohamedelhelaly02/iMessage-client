@@ -8,7 +8,7 @@
 
       <defs>
         <linearGradient
-          id="login-bubble-gradient"
+          id="login-bubblze-gradient"
           x1="2.8"
           y1="3"
           x2="21.2"
@@ -84,8 +84,18 @@
     </div>
 
     <!-- Submit -->
-    <button class="btn-primary" type="submit">
-      {{ 'LOGIN.BUTTON.SUBMIT' | translate }}
+    <button
+      class="btn-primary"
+      [class.btn-primary--loading]="isLoading()"
+      type="submit"
+      [disabled]="isLoading()"
+    >
+      @if (isLoading()) {
+        <span class="btn-spinner" aria-hidden="true"></span>
+        <span class="sr-only">{{ 'LOGIN.BUTTON.LOADING' | translate }}</span>
+      } @else {
+        {{ 'LOGIN.BUTTON.SUBMIT' | translate }}
+      }
     </button>
   </form>
 

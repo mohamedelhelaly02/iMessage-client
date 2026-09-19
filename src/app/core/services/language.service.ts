@@ -1,72 +1,65 @@
 import { computed, Injectable, signal } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 
-export type LanguageCode = 'en' | 'ar' | 'fr';
-export type Language = { code: string, name: string, flag: string };
-export const availableLanguages: Language[] = [
-    {
-        code: 'en',
-        name: 'English',
-        flag: '🇬🇧'
-    },
-    {
-        code: 'ar',
-        name: 'العربية',
-        flag: '🇪🇬'
-    },
-    {
-        code: 'fr',
-        name: 'Français',
-        flag: '🇫🇷'
-    }
-];
+interface ILanguage {
+    code: string;
+    name: string;
+    flag: string
+}
 
 @Injectable({ providedIn: 'root' })
 export class LanguageService {
-    private readonly _currentLanguageSignal = signal<LanguageCode>(
+
+    private readonly _languagesSignal = signal<ILanguage[]>([
+        { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+        { code: 'en', name: 'English', flag: '🇬🇧' },
+        { code: 'fr', name: 'Français', flag: '🇫🇷' },
+    ]);
+
+    readonly languages = this._languagesSignal.asReadonly();
+
+    private readonly _currentLanguageSignal = signal<ILanguage>(
         this.getInitialLanguage());
 
     readonly currentSelectedLang = this._currentLanguageSignal.asReadonly();
-    readonly isRtl = computed(() => this._currentLanguageSignal() === 'ar');
+    readonly isRtl = computed(() => this._currentLanguageSignal().code === 'ar');
 
     constructor(private readonly _translateService: TranslateService) {
         this._translateService.addLangs(['en', 'ar', 'fr']);
         this.setLanguage(this._currentLanguageSignal());
     }
 
-    setLanguage(language: LanguageCode) {
-        console.log('current selected: ', language);
+    setLanguage(language: ILanguage) {
         this._currentLanguageSignal.set(language);
 
-        localStorage.setItem('lang', language);
-        this._translateService.use(language);
+        localStorage.setItem('lang', JSON.stringify(language));
+        this._translateService.use(language.code);
 
-        document.documentElement.lang = language;
-        document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+        document.documentElement.lang = language.code;
+        document.documentElement.dir = language.code === 'ar' ? 'rtl' : 'ltr';
     }
 
-    getInitialLanguage(): LanguageCode {
-        const language = localStorage.getItem('lang');
-        if (!language) {
-            return 'en';
-        }
+    getInitialLanguage(): ILanguage {
+        const storedLanguage = localStorage.getItem('lang');
+        if (!storedLanguage)
+            return this._languagesSignal()[0];
 
-        if (this.isSupportedLanguage(language)) {
-            return language as LanguageCode;
-        }
+        try {
+            const language = JSON.parse(storedLanguage) as ILanguage;
+            console.log("Parsed lang: ", language);
+            
+            if (!this.isSupportedLanguage(language)) {
+                return this._languagesSignal()[0];
+            }
 
-        return 'en';
+            return language;
+        } catch (error) {
+            return this._languagesSignal()[0];
+        }
     }
-    isSupportedLanguage(language: string | null) {
-        if (!language)
-            return false;
 
-        return (
-            language === 'en' ||
-            language === 'ar' ||
-            language === 'fr'
-        );
-
+    private isSupportedLanguage(language: ILanguage): boolean {
+        return this._languagesSignal().some(l => l.code === language.code);
     }
 
 }

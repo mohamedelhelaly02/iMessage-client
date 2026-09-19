@@ -46,7 +46,8 @@
             "ERROR_REQUIRED": "كلمة المرور مطلوبة"
         },
         "BUTTON": {
-            "SUBMIT": "تسجيل الدخول"
+            "SUBMIT": "تسجيل الدخول",
+            "LOADING": "جاري تسجيل الدخول..."
         },
         "FOOTER": {
             "QUESTION": "ليس لديك حساب؟",
@@ -86,6 +87,11 @@
             "VOICE_CALL": "مكالمة صوتية",
             "VIDEO_CALL": "مكالمة فيديو",
             "INFO": "معلومات"
+        }
+    },
+    "COMMON": {
+        "SEARCH": {
+            "PLACEHOLDER": "بحث"
         }
     }
 }

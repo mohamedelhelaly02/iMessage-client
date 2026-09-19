@@ -9,8 +9,7 @@ export class ConversationService {
     private readonly httpClient = inject(HttpClient);
     private readonly headers = new HttpHeaders()
         .set('Content-Type', 'application/json');
-
-
+    private readonly _activeConversationId = signal<string>('');
     private _conversations: WritableSignal<IConversation[]> = signal<IConversation[]>([]);
     private selectedConversationId: WritableSignal<string> = signal<string>('');
 
@@ -19,6 +18,13 @@ export class ConversationService {
     });
 
     readonly conversations = this._conversations.asReadonly();
+    readonly activeConversationId = this._activeConversationId.asReadonly();
+
+    setActiveConversation(id: string) {
+        const isExists = this.conversations().some(c => c.id === id);
+        if (!isExists) return;
+        this._activeConversationId.set(id);
+    }
 
     getConversations(): Observable<IConversation[]> {
         return this.httpClient.get<IConversation[]>(this.BASE_URL, {

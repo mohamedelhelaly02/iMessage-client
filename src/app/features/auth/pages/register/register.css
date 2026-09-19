@@ -1,6 +1,6 @@
 .auth-card {
   width: 100%;
-  max-width: 440px;
+  max-width: 500px;
   min-width: 0;
   background: var(--color-bg-card);
   border-radius: 22px;

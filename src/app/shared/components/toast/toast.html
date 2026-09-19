@@ -1,7 +1,18 @@
-<div class="toast-stack" aria-live="polite">
+<div
+  class="fixed top-4 end-4 z-50 flex flex-col items-end gap-2 px-4 pointer-events-none w-full max-w-sm"
+  aria-live="polite"
+>
   @for (toast of toasts(); track toast.id) {
-    <div class="toast toast--{{ toast.type }}">
-      <div class="toast__icon">
+    <div
+      class="relative flex items-start gap-3 w-full p-4 rounded-2xl bg-white shadow-lg ring-1 ring-black/5 overflow-hidden pointer-events-auto animate-[toast-in_0.25s_ease-out]"
+      [style.--toast-accent]="toastAccentColor(toast.type)"
+    >
+      <span
+        class="absolute inset-y-0 start-0 w-1 bg-[var(--toast-accent)]"
+        aria-hidden="true"
+      ></span>
+
+      <div class="flex-shrink-0 w-6 h-6 mt-0.5">
         @if (toast.type === 'success') {
           <svg viewBox="0 0 24 24" fill="none">
             <circle cx="12" cy="12" r="10" fill="#30d158" />
@@ -14,14 +25,12 @@
             />
           </svg>
         }
-
         @if (toast.type === 'error') {
           <svg viewBox="0 0 24 24" fill="none">
             <circle cx="12" cy="12" r="10" fill="#ff3b30" />
             <path d="M9 9l6 6M15 9l-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round" />
           </svg>
         }
-
         @if (toast.type === 'warning') {
           <svg viewBox="0 0 24 24" fill="none">
             <circle cx="12" cy="12" r="10" fill="#ff9f0a" />
@@ -29,7 +38,6 @@
             <circle cx="12" cy="16.2" r="1.1" fill="#fff" />
           </svg>
         }
-
         @if (toast.type === 'info') {
           <svg viewBox="0 0 24 24" fill="none">
             <circle cx="12" cy="12" r="10" fill="#0a84ff" />
@@ -39,26 +47,39 @@
         }
       </div>
 
-      <div class="toast__body">
-        <p class="toast__title">
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-semibold text-gray-900 leading-snug">
           {{ toast.title }}
         </p>
-
         @if (toast.message) {
-          <p class="toast__message">
+          <p class="mt-0.5 text-[13px] text-gray-500 leading-snug">
             {{ toast.message }}
           </p>
         }
       </div>
 
-      <button class="toast__close" type="button" aria-label="إغلاق" (click)="dismiss(toast.id)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <button
+        type="button"
+        aria-label="إغلاق"
+        (click)="dismiss(toast.id)"
+        class="flex-shrink-0 w-6 h-6 -m-1 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-black/5 transition-colors"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          class="w-4 h-4"
+        >
           <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
         </svg>
       </button>
 
       @if (toast.duration) {
-        <span class="toast__progress" [style.animation-duration.ms]="toast.duration"></span>
+        <span
+          class="absolute bottom-0 start-0 h-0.5 bg-[var(--toast-accent)] animate-[toast-progress_linear_forwards]"
+          [style.animation-duration.ms]="toast.duration"
+        ></span>
       }
     </div>
   }

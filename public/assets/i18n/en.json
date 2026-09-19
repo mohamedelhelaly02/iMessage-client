@@ -46,7 +46,8 @@
             "ERROR_REQUIRED": "Password is required"
         },
         "BUTTON": {
-            "SUBMIT": "Login"
+            "SUBMIT": "Sign In",
+            "LOADING": "Signing in..."
         },
         "FOOTER": {
             "QUESTION": "Don't have an account?",
@@ -86,6 +87,11 @@
             "VOICE_CALL": "Voice call",
             "VIDEO_CALL": "Video call",
             "INFO": "Info"
+        }
+    },
+    "COMMON": {
+        "SEARCH": {
+            "PLACEHOLDER": "Search"
         }
     }
 }

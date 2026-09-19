@@ -46,7 +46,8 @@
             "ERROR_REQUIRED": "Le mot de passe est requis"
         },
         "BUTTON": {
-            "SUBMIT": "Se connecter"
+            "SUBMIT": "Se connecter",
+            "LOADING": "Connexion en cours..."
         },
         "FOOTER": {
             "QUESTION": "Vous n'avez pas de compte ?",
@@ -86,6 +87,11 @@
             "VOICE_CALL": "Appel vocal",
             "VIDEO_CALL": "Appel vidéo",
             "INFO": "Info"
+        }
+    },
+    "COMMON": {
+        "SEARCH": {
+            "PLACEHOLDER": "Rechercher"
         }
     }
 }
