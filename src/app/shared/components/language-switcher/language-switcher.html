@@ -1,0 +1,16 @@
+<div class="language-switcher" aria-label="Language switcher">
+  <label class="language-switcher__label" for="language-select" aria-label="Select language">
+    🌐
+  </label>
+
+  <select
+    id="language-select"
+    class="language-switcher__select"
+    [ngModel]="currentLanguage()"
+    (ngModelChange)="onLanguageChange($event)"
+  >
+    @for (language of languages; track language.code) {
+      <option [ngValue]="language.code">{{ language.flag }} {{ language.name }}</option>
+    }
+  </select>
+</div>

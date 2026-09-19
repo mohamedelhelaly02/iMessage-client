@@ -3,7 +3,7 @@
 
   <app-navbar-blank (logoutEvent)="onLogout()"></app-navbar-blank>
 
-  <div class="app-shell" dir="rtl">
+  <div class="app-shell" [attr.dir]="isRtl() ? 'rtl' : 'ltr'">
     <router-outlet></router-outlet>
   </div>
 </div>

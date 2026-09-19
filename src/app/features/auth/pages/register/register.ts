@@ -1,15 +1,17 @@
 import { Component, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AuthService } from '../../../../core/auth/auth-service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { IRegisterData } from '../../models/register-data';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiProblemDetails } from '../../../../core/helpers/apiProblemDetails';
 import { finalize } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
   selector: 'app-register',
   styleUrl: './register.css',
   templateUrl: './register.html',
@@ -34,6 +36,7 @@ export class Register {
   private readonly authService = inject(AuthService);
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly destroyedRef = inject(DestroyRef);
+  readonly isRtl = inject(LanguageService).isRtl;
 
 
   registerForm = this.fb.group({

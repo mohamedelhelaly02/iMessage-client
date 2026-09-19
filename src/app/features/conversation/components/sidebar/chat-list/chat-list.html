@@ -1,4 +1,4 @@
-<nav class="chat-list" dir="rtl">
+<nav class="chat-list">
   @for (conversation of conversations(); track conversation.id) {
     <a class="chat-item" role="button" (click)="selectConversation(conversation.id)">
       <div class="avatar {{ getAvatarColorClass(conversation) }}">
@@ -31,16 +31,22 @@
 
         @if (isConversationTyping(conversation.id)) {
           <span class="chat-header__status chat-header__status--typing">
-            يكتب<span class="typing-dots" aria-label="Typing"
+            {{ 'CHAT.LIST.TYPING' | translate
+            }}<span class="typing-dots" aria-label="Typing"
               ><span></span><span></span><span></span
             ></span>
           </span>
         }
 
         @if (conversation.lastMessageAtUtc) {
-          <p class="chat-item__preview">آخر نشاط {{ formatTime(conversation.lastMessageAtUtc) }}</p>
+          <p class="chat-item__preview">
+            {{ 'CHAT.LIST.LAST_ACTIVE' | translate }}
+            {{ formatTime(conversation.lastMessageAtUtc) }}
+          </p>
         } @else {
-          <p class="chat-item__preview chat-item__preview--empty">ابدأ المحادثة الآن</p>
+          <p class="chat-item__preview chat-item__preview--empty">
+            {{ 'CHAT.LIST.START_NOW' | translate }}
+          </p>
         }
       </div>
     </a>

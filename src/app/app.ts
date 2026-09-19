@@ -1,7 +1,7 @@
 import { Component, effect, inject } from '@angular/core';
-import { AuthStateService } from './core/auth/auth-state-service';
 import { SignalRService } from './core/hub/signalR-service';
 import { RouterOutlet } from '@angular/router';
+import { AuthStateService } from './core/services/auth-state-service';
 
 @Component({
   imports: [RouterOutlet],

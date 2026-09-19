@@ -29,6 +29,7 @@
     opacity: 0;
     transform: translateY(-14px) scale(0.96);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -50,7 +51,7 @@
 .toast__body {
   flex: 1;
   min-width: 0;
-  text-align: right;
+  text-align: start;
 }
 
 .toast__title {
@@ -97,35 +98,60 @@
 .toast__progress {
   position: absolute;
   bottom: 0;
-  right: 0;
-  left: 0;
+  inset-inline: 0;
   height: 3px;
   background: rgba(118, 118, 128, 0.25);
-  transform-origin: right;
+  transform-origin: start;
   animation-name: toast-progress;
   animation-timing-function: linear;
   animation-fill-mode: forwards;
 }
 
 @keyframes toast-progress {
-  from { transform: scaleX(1); }
-  to { transform: scaleX(0); }
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
 }
 
-.toast--success { border-inline-start: 3px solid var(--success); }
-.toast--error   { border-inline-start: 3px solid var(--error); }
-.toast--warning { border-inline-start: 3px solid var(--warning); }
-.toast--info    { border-inline-start: 3px solid var(--info); }
+.toast--success {
+  border-inline-start: 3px solid var(--success);
+}
 
-.toast--success .toast__progress { background: rgba(48, 209, 88, 0.3); }
-.toast--error .toast__progress   { background: rgba(255, 59, 48, 0.3); }
-.toast--warning .toast__progress { background: rgba(255, 159, 10, 0.3); }
-.toast--info .toast__progress    { background: rgba(10, 132, 255, 0.3); }
+.toast--error {
+  border-inline-start: 3px solid var(--error);
+}
+
+.toast--warning {
+  border-inline-start: 3px solid var(--warning);
+}
+
+.toast--info {
+  border-inline-start: 3px solid var(--info);
+}
+
+.toast--success .toast__progress {
+  background: rgba(48, 209, 88, 0.3);
+}
+
+.toast--error .toast__progress {
+  background: rgba(255, 59, 48, 0.3);
+}
+
+.toast--warning .toast__progress {
+  background: rgba(255, 159, 10, 0.3);
+}
+
+.toast--info .toast__progress {
+  background: rgba(10, 132, 255, 0.3);
+}
 
 @media (max-width: 420px) {
   :host {
-    left: 10px;
-    right: 10px;
+    inset-inline: 10px;
     top: 12px;
   }
 

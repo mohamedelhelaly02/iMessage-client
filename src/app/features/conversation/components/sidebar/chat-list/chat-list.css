@@ -116,7 +116,7 @@
 .avatar__group-badge {
     position: absolute;
     bottom: -2px;
-    left: -2px;
+    inset-inline-start: -2px;
     width: 18px;
     height: 18px;
     border-radius: 50%;
@@ -148,5 +148,5 @@
     border-radius: 50%;
     position: absolute;
     bottom: 2px;
-    right: 2px;
+    inset-inline-end: 2px;
 }

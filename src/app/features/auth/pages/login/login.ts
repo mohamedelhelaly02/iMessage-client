@@ -1,14 +1,16 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../../../core/auth/auth-service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { ILoginData } from '../../models/login-data';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiProblemDetails } from '../../../../core/helpers/apiProblemDetails';
+import { LanguageService } from '../../../../core/services/language.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
   selector: 'app-login',
   styleUrl: './login.css',
   templateUrl: './login.html',

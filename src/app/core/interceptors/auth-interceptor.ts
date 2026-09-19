@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { SignalRService } from '../hub/signalR-service';
 import { catchError, throwError } from 'rxjs';
-import { AuthStateService } from '../auth/auth-state-service';
+import { AuthStateService } from '../services/auth-state-service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authStateService = inject(AuthStateService);

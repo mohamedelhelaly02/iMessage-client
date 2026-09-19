@@ -47,7 +47,7 @@
   color: var(--color-accent);
   font-weight: 600;
   text-decoration: none;
-  margin-right: 4px;
+  margin-inline-end: 4px;
 }
 
 .auth-card__footer a:hover {
@@ -59,7 +59,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  text-align: right;
+  text-align: start;
 }
 
 .form-field {
@@ -94,7 +94,7 @@
 }
 
 .form-field__input-wrap .form-field__input {
-  padding-left: 40px;
+  padding-inline-start: 40px;
 }
 
 .form-field__input:focus {
@@ -109,7 +109,7 @@
 
 .form-field__toggle {
   position: absolute;
-  left: 10px;
+  inset-inline-start: 10px;
   border: none;
   background: transparent;
   color: var(--color-text-secondary);
@@ -168,12 +168,12 @@
   transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.checkbox input:checked + .checkbox__box {
+.checkbox input:checked+.checkbox__box {
   background: var(--color-accent);
   border-color: var(--color-accent);
 }
 
-.checkbox input:checked + .checkbox__box::after {
+.checkbox input:checked+.checkbox__box::after {
   content: "";
   width: 5px;
   height: 9px;

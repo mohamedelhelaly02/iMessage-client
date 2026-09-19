@@ -2,10 +2,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
-import { AuthStateService } from './auth-state-service';
 import { ILoginData } from '../../features/auth/models/login-data';
 import { IRegisterData } from '../../features/auth/models/register-data';
 import { AuthResponse } from '../../features/auth/models/auth-response';
+import { AuthStateService } from './auth-state-service';
 
 @Service()
 export class AuthService {

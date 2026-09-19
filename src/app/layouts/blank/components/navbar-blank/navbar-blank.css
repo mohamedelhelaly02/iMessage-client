@@ -60,6 +60,12 @@
   letter-spacing: -0.01em;
 }
 
+.blank-navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 /* ===================== زر تسجيل الخروج ===================== */
 .blank-navbar__logout {
   display: flex;
@@ -89,6 +95,10 @@
 }
 
 @media (max-width: 480px) {
+  .blank-navbar__actions {
+    gap: 8px;
+  }
+
   .blank-navbar__logout-label {
     display: none;
   }

@@ -1,8 +1,8 @@
 import { Service, inject, signal } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { AuthStateService } from '../auth/auth-state-service';
 import { ToastService } from '../../shared/services/toast-service';
 import { IUser } from '../../features/auth/models/user';
+import { AuthStateService } from '../services/auth-state-service';
 
 export interface IUserPresenceDto {
     isOnline: boolean,

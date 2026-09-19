@@ -20,7 +20,7 @@
 
     background: var(--color-bg);
     color: var(--color-text);
-    direction: rtl;
+    direction: inherit;
 }
 
 .no-chat-selected h1 {

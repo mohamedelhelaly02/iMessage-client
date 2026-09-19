@@ -4,7 +4,7 @@ import { Messages } from './messages/messages';
 import { Composer } from './composer/composer';
 import { ConversationService } from '../../services/conversation-service';
 import { SignalRService } from '../../../../core/hub/signalR-service';
-import { AuthStateService } from '../../../../core/auth/auth-state-service';
+import { AuthStateService } from '../../../../core/services/auth-state-service';
 
 @Component({
   imports: [ChatHeader, Messages, Composer],

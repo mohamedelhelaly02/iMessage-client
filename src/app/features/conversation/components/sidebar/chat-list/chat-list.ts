@@ -1,9 +1,11 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ConversationService } from '../../../services/conversation-service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IConversation } from '../../../models/conversation';
-import { AuthStateService } from '../../../../../core/auth/auth-state-service';
 import { SignalRService } from '../../../../../core/hub/signalR-service';
+import { LanguageService } from '../../../../../core/services/language.service';
+import { AuthStateService } from '../../../../../core/services/auth-state-service';
 
 const AVATAR_COLORS = [
   'avatar--purple',
@@ -15,7 +17,7 @@ const AVATAR_COLORS = [
 ];
 
 @Component({
-  imports: [],
+  imports: [TranslatePipe],
   selector: 'app-chat-list',
   styleUrl: './chat-list.css',
   templateUrl: './chat-list.html',

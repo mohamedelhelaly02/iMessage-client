@@ -1,8 +1,10 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { IConversation } from '../../../models/conversation';
-import { AuthStateService } from '../../../../../core/auth/auth-state-service';
 import { SignalRService } from '../../../../../core/hub/signalR-service';
+import { LanguageService } from '../../../../../core/services/language.service';
+import { AuthStateService } from '../../../../../core/services/auth-state-service';
 
 const AVATAR_COLORS = [
   'avatar--purple',
@@ -14,7 +16,7 @@ const AVATAR_COLORS = [
 ];
 
 @Component({
-  imports: [DatePipe],
+  imports: [DatePipe, TranslatePipe],
   selector: 'app-chat-header',
   styleUrl: './chat-header.css',
   templateUrl: './chat-header.html',
@@ -22,6 +24,7 @@ const AVATAR_COLORS = [
 export class ChatHeader {
   private readonly authStateService = inject(AuthStateService);
   private readonly signalRService = inject(SignalRService);
+  readonly isRtl = inject(LanguageService).isRtl;
   private currentUserId = this.authStateService.currentUser()?.id;
 
   isOtherUserTyping = input.required<boolean>();
